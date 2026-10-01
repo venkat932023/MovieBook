@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+{% block title %}Profile | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">PROFILE MODULE</span><h1>My Profile</h1><p>View and update your MovieBook account information.</p></div></section>
+<section class="section narrow">
+<div class="profile-layout">
+    <div class="profile-card">
+        <div class="avatar">{{ user["name"][0]|upper }}</div>
+        <h2>{{ user["name"] }}</h2><p>{{ user["email"] }}</p>
+        <a class="btn outline-dark" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <form method="POST" class="form-card">
+        <h2>Account details</h2>
+        <label>Name<input name="name" value="{{ user['name'] }}" required></label>
+        <label>Email<input value="{{ user['email'] }}" disabled></label>
+        <label>Mobile<input name="mobile" value="{{ user['mobile'] }}" pattern="[0-9]{10}" maxlength="10" required></label>
+        <label>City<input name="city" value="{{ user['city'] or '' }}" placeholder="Your city"></label>
+        <button class="btn primary" type="submit">Save Changes</button>
+    </form>
+</div>
+</section>
+{% endblock %}

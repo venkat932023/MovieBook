@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Login | MovieBook{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card compact"><div class="auth-logo">🎬 <span>Movie</span>Book</div><h1>Welcome back</h1><p class="muted">Login to book tickets, use Notify Me and manage bookings.</p>
+<form method="POST" class="stack-form"><input type="hidden" name="next" value="{{ next_url }}"><label>Email<input type="email" name="email" placeholder="Enter registered email" required></label><label>Password<input type="password" name="password" placeholder="Enter password" required></label><button class="btn primary" type="submit">Login</button></form>
+<p class="auth-switch">New to MovieBook? <a href="{{ url_for('register') }}">Create account</a></p></div></section>
+{% endblock %}

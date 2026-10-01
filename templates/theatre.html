@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ theatre["name"] }} | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner theatre-banner">
+    <div>
+        <span class="eyebrow">THEATRE & SHOW MODULE</span>
+        <h1>🎬 {{ theatre["name"] }}</h1>
+        <p>📍 {{ theatre["address"] }}, {{ theatre["city"] }}</p>
+        <div class="theatre-actions">
+            <a class="btn outline" href="{{ url_for('location') }}">← Nearby Theatres</a>
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ theatre['latitude'] }},{{ theatre['longitude'] }}">🗺️ Open Map</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">AVAILABLE SHOWS</span>
+            <h2>Movies & show timings</h2>
+        </div>
+        <span class="show-count">{{ shows|length }} available show{{ '' if shows|length == 1 else 's' }}</span>
+    </div>
+
+    <div class="show-grid">
+    {% for show in shows %}
+        <article class="show-card poster-show-card">
+            <div class="show-poster-wrap">
+                {% if show["poster_url"] %}
+                    <img class="show-poster" src="{{ show['poster_url'] }}" alt="{{ show['movie'] }} poster" loading="lazy">
+                {% else %}
+                    <div class="show-poster fallback-poster">
+                        <span>🎬</span>
+                        <strong>{{ show["movie"] }}</strong>
+                        <small>MovieBook</small>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="show-content">
+                <span class="chip">{{ show["language"] }}</span>
+                <h2>{{ show["movie"] }}</h2>
+                <p class="rating-line">⭐ <strong>{{ "%.1f"|format(show["rating"] or 0) }}/10</strong></p>
+                <p class="show-description">{{ show["description"] or "Enjoy this movie at the selected theatre." }}</p>
+                <div class="show-time">🕐 {{ show["show_time"] }}</div>
+                <div class="show-meta">₹{{ show["price"] }} per seat • {{ show["available_seats"] }} seats available</div>
+            </div>
+            <div class="show-book-action">
+                <a class="btn primary" href="{{ url_for('booking', show_id=show['show_id']) }}">🎟️ Book Now</a>
+            </div>
+        </article>
+    {% else %}
+        <div class="empty-state"><h2>No shows available</h2><p>Please select another theatre.</p></div>
+    {% endfor %}
+    </div>
+</section>
+{% endblock %}

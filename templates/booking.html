@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+{% block title %}Book Tickets | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">BOOKING MODULE</span><h1>Confirm your movie ticket</h1><p>Choose the date and number of seats.</p></div></section>
+<section class="section narrow">
+<div class="booking-layout">
+    <div class="summary-card">
+        <span class="chip">Selected Show</span>
+        <h2>{{ show["movie"] }}</h2>
+        <p>🎬 {{ show["theatre"] }}, {{ show["city"] }}</p>
+        <p>🕐 {{ show["show_time"] }}</p>
+        <p>💺 {{ show["available_seats"] }} seats currently available</p>
+        <div class="price-highlight">₹<span id="price">{{ show["price"] }}</span> / seat</div>
+    </div>
+    <form method="POST" class="form-card">
+        <input type="hidden" name="show_id" value="{{ show['show_id'] }}">
+        <label>Booking date<input type="date" name="booking_date" value="{{ today_iso }}" required></label>
+        <label>Number of seats<input id="seatCount" type="number" name="seats" value="1" min="1" max="{{ [show['available_seats'], 10]|min }}" required></label>
+        <div class="total-box">Total amount <strong>₹<span id="total">{{ show["price"] }}</span></strong></div>
+        <button class="btn primary full" type="submit">Confirm Booking</button>
+        <a class="btn ghost full" href="{{ url_for('theatre', theatre_id=show['theatre_id']) }}">Back</a>
+    </form>
+</div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+const price = {{ show["price"]|int }};
+const seatInput = document.getElementById("seatCount");
+const total = document.getElementById("total");
+function updateTotal(){ total.textContent = (price * Number(seatInput.value || 1)).toLocaleString("en-IN"); }
+seatInput.addEventListener("input", updateTotal);
+updateTotal();
+</script>
+{% endblock %}

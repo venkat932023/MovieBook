@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Home | MovieBook{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <span class="eyebrow">MOVIE TICKET BOOKING PLATFORM</span>
+        <h1>Book your next <span>movie</span> in a few clicks.</h1>
+        <p>Discover movies with original posters, find nearby theatres, choose shows and manage your bookings from one place.</p>
+        <div class="hero-actions">
+            <a class="btn primary" href="{{ url_for('movies') }}">Explore Movies</a>
+            <a class="btn outline" href="{{ url_for('location') }}">📍 Find Nearby Theatres</a>
+            {% if not logged_in %}
+                <a class="btn outline" href="{{ url_for('register') }}">👤 Register</a>
+                <a class="btn outline" href="{{ url_for('login') }}">🔐 Login</a>
+            {% else %}
+                <a class="btn outline" href="{{ url_for('profile') }}">👤 My Profile</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-head">
+        <div><span class="eyebrow">ALL-IN-ONE EXPERIENCE</span><h2>MovieBook modules</h2></div>
+        <a class="text-link" href="{{ url_for('about') }}">Learn more →</a>
+    </div>
+    <div class="module-grid">
+        <a class="module-card" href="{{ url_for('register') }}"><div class="module-icon">👤</div><h3>Registration & Login</h3><p>Create an account and securely access your profile.</p></a>
+        <a class="module-card" href="{{ url_for('location') }}"><div class="module-icon">📍</div><h3>Live Location</h3><p>Use browser location to find nearby cinema venues.</p></a>
+        <a class="module-card" href="{{ url_for('movies') }}"><div class="module-icon">🎬</div><h3>Movies</h3><p>Browse original movie posters, ratings and release information.</p></a>
+        <a class="module-card" href="{{ url_for('my_bookings') }}"><div class="module-icon">🎟️</div><h3>Booking</h3><p>Select a show, seats and confirm a ticket booking.</p></a>
+        <a class="module-card" href="{{ url_for('my_bookings') }}"><div class="module-icon">📋</div><h3>My Bookings</h3><p>View confirmed and cancelled booking history.</p></a>
+        <a class="module-card" href="{{ url_for('about') }}"><div class="module-icon">ℹ️</div><h3>About</h3><p>Understand the purpose and features of MovieBook.</p></a>
+    </div>
+</section>
+
+<section class="section soft">
+    <div class="section-head">
+        <div><span class="eyebrow">DISCOVER</span><h2>Featured movies</h2></div>
+        <a class="text-link" href="{{ url_for('movies') }}">View all →</a>
+    </div>
+    <div class="movie-grid">
+        {% for movie in movies %}
+        <article class="movie-card">
+            <div class="poster poster-{{ loop.index % 5 }} {% if not movie.poster %}poster-missing{% endif %}">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.name }} official movie poster" loading="lazy">
+                {% else %}
+                    <div class="poster-missing-message"><span>🎬</span><strong>Poster unavailable</strong><small>Add TMDB token in .env</small></div>
+                {% endif %}
+                <span class="poster-tag">{{ movie.genre }}</span>
+                <div class="poster-title">{{ movie.name }}</div>
+                <div class="poster-meta">⭐ {{ "%.1f"|format(movie.rating or 0) }} • {{ movie.language }}</div>
+            </div>
+            <div class="movie-info">
+                <h3>{{ movie.name }}</h3>
+                <p>{{ movie.description }}</p>
+                <a class="btn small primary" href="{{ url_for('movies') }}">Find a Show</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section location-strip">
+    <div>
+        <span class="eyebrow">LIVE LOCATION</span>
+        <h2>Find theatres around you</h2>
+        <p>Allow location access and MovieBook will search nearby cinemas using live coordinates.</p>
+    </div>
+    <a class="btn primary" href="{{ url_for('location') }}">Use My Location</a>
+</section>
+{% endblock %}

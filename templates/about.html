@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+{% block title %}About | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">ABOUT MODULE</span><h1>About MovieBook</h1><p>A simple full-stack movie ticket booking application for a college software engineering project.</p></div></section>
+<section class="section">
+<div class="about-grid">
+    <article class="info-card"><div class="module-icon">🎬</div><h2>Purpose</h2><p>MovieBook demonstrates a complete booking workflow: registration, login, movie discovery, nearby theatre search, show selection, ticket booking, booking history and cancellation.</p></article>
+    <article class="info-card"><div class="module-icon">⚙️</div><h2>Technology</h2><p>Python Flask is used for the web server, Jinja2 for templates, HTML/CSS/JavaScript for the interface and SQLite for persistent project data.</p></article>
+    <article class="info-card"><div class="module-icon">📍</div><h2>Location</h2><p>The location module uses browser geolocation and a live OpenStreetMap-based cinema search, with a local theatre database available as a fallback.</p></article>
+</div>
+<div class="section-inner">
+<h2>Complete project modules</h2>
+<div class="module-grid compact">
+{% for title, text in [
+("Home","Landing page and navigation hub."),
+("Registration & Login","User account creation and session-based login."),
+("Location / Nearby Theatre","Live browser location and nearby cinema discovery."),
+("Theatre & Show","Theatre details, movies, timings, price and seats."),
+("Booking","Seat selection, price calculation and confirmation."),
+("My Bookings","Booking history and status tracking."),
+("Cancellation","Booking cancellation and seat restoration."),
+("Profile","Account information and profile update."),
+("About & Contact","Project information and user contact form.")
+] %}
+<div class="module-card"><h3>{{ title }}</h3><p>{{ text }}</p></div>
+{% endfor %}
+</div>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+
+{% extends "base.html" %}
+{% block title %}Cancel Booking | MovieBook{% endblock %}
+{% block content %}
+<section class="auth-page">
+<div class="confirm-card">
+    <div class="warning-icon">!</div>
+    <h1>Cancel ticket?</h1>
+    <p class="muted">Please review the booking before confirming cancellation.</p>
+    <div class="cancel-summary">
+        <p><strong>Booking:</strong> #{{ booking["id"] }}</p>
+        <p><strong>Movie:</strong> {{ booking["movie"] }}</p>
+        <p><strong>Theatre:</strong> {{ booking["theatre"] }}</p>
+        <p><strong>Date & time:</strong> {{ booking["booking_date"] }} • {{ booking["show_time"] }}</p>
+        <p><strong>Seats:</strong> {{ booking["seats"] }}</p>
+        <p><strong>Total:</strong> ₹{{ booking["total_price"] }}</p>
+    </div>
+    <form method="POST">
+        <button class="btn danger full" type="submit">Confirm Cancellation</button>
+    </form>
+    <a class="btn ghost full" href="{{ url_for('my_bookings') }}">Keep My Booking</a>
+</div>
+</section>
+{% endblock %}

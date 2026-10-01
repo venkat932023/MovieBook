@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Nearby Theatres | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">LOCATION MODULE</span><h1>Nearby Theatres</h1><p>Detect your current location and book a show from a nearby theatre.</p></div></section>
+<section class="section">
+<div class="location-card"><div><div class="module-icon">📍</div><h2>Use my current location</h2><p id="locationStatus" class="muted">Click Detect My Location and allow browser location access.</p></div><button class="btn primary" onclick="findNearbyTheatres()">📍 Detect My Location</button></div>
+<div id="locationInfo" class="location-result hidden"></div>
+<div id="theatreResults" class="theatre-grid"><div class="empty-state"><h2>Nearby theatres will appear here</h2><p>Live coordinates are used to calculate distance.</p></div></div>
+<div class="section-inner"><div class="section-head"><div><span class="eyebrow">THEATRE DIRECTORY</span><h2>MovieBook Theatres</h2></div></div><div class="theatre-grid">
+{% for theatre in theatres %}<article class="theatre-card"><div class="theatre-icon">🎭</div><div class="theatre-content"><h3>{{ theatre.name }}</h3><p>{{ theatre.address }}, {{ theatre.city }}</p></div><div class="hero-actions"><a class="btn small outline-dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query={{ theatre.latitude }},{{ theatre.longitude }}">🗺️ Open Map</a><a class="btn small primary" href="{{ url_for('theatre', theatre_id=theatre.id) }}">🎟️ Book Show</a></div></article>{% endfor %}
+</div></div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+async function findNearbyTheatres(){
+ const status=document.getElementById('locationStatus'), result=document.getElementById('theatreResults'), info=document.getElementById('locationInfo');
+ if(!navigator.geolocation){status.textContent='Geolocation is not supported.';return;}
+ status.textContent='Detecting your current location...'; result.innerHTML='<div class="loading">Searching nearby theatres...</div>';
+ navigator.geolocation.getCurrentPosition(async p=>{
+  const lat=p.coords.latitude,lon=p.coords.longitude; info.classList.remove('hidden'); info.innerHTML=`<strong>Current coordinates:</strong> ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  try{const r=await fetch(`/api/nearby-theatres?lat=${lat}&lon=${lon}`);const ts=await r.json();if(!r.ok||ts.error)throw new Error(ts.error||'Search failed');
+   status.textContent=`${ts.length} nearby theatre(s) found.`;
+   result.innerHTML=ts.map(t=>`<article class="theatre-card"><div class="theatre-icon">🎬</div><div class="theatre-content"><span class="distance">${t.distance} km away</span><h3>${escapeHtml(t.name)}</h3><p>${escapeHtml(t.address||t.city||'Nearby cinema')}</p><small>${escapeHtml(t.source||'Location service')}</small></div><div class="hero-actions"><a class="btn small outline-dark" target="_blank" href="${t.map_url}">🗺️ Open Map</a><a class="btn small primary" href="${t.book_url || '/location'}">🎟️ Book Show</a></div></article>`).join('');
+  }catch(e){status.textContent='Live search unavailable. Showing local theatre directory below.';result.innerHTML='<div class="empty-state"><h2>Live cinema service unavailable</h2><p>Use the theatre directory below.</p></div>'}
+ },()=>{status.textContent='Location permission was not granted. Please allow location access.';result.innerHTML='<div class="empty-state"><h2>Location permission needed</h2><p>Allow location access and try again.</p></div>'},{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+</script>
+{% endblock %}

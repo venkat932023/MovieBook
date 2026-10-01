@@ -1,0 +1,6 @@
+
+{% extends "base.html" %}
+{% block title %}{{ code }} | MovieBook{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="confirm-card"><div class="module-icon">⚠️</div><h1>{{ code }}</h1><p>{{ message }}</p><a class="btn primary" href="{{ url_for('home') }}">Back to Home</a></div></section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}My Bookings | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">MY BOOKINGS MODULE</span><h1>My Bookings</h1><p>View, track and cancel your MovieBook tickets.</p></div></section>
+<section class="section narrow">
+{% for b in bookings %}
+<article class="form-card" style="margin-bottom:18px"><div class="section-head"><div><span class="chip">Booking #MB{{ "%05d"|format(b.id) }}</span><h2>{{ b.movie }}</h2></div><strong>{{ b.status }}</strong></div>
+<p>🎭 {{ b.theatre }} &nbsp; | &nbsp; 📅 {{ b.booking_date }} &nbsp; | &nbsp; 🕐 {{ b.show_time }}</p><p>💺 {{ b.seats }} seat(s) &nbsp; | &nbsp; 💰 ₹{{ b.total_price }}</p>
+{% if b.status != 'Cancelled' %}<a class="btn primary small" href="{{ url_for('cancellation', booking_id=b.id) }}">❌ Cancel Ticket</a>{% else %}<span class="chip">Cancelled</span>{% endif %}
+</article>
+{% else %}<div class="empty-state"><h2>No bookings yet</h2><p>Go to Movies → Theatre → Book Now.</p><a class="btn primary" href="{{ url_for('movies') }}">Browse Movies</a></div>{% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+{% block title %}Contact | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner"><div><span class="eyebrow">CONTACT MODULE</span><h1>Contact MovieBook</h1><p>Send a message or use the project contact information below.</p></div></section>
+<section class="section narrow">
+<div class="contact-layout">
+<form method="POST" class="form-card">
+    <label>Name<input name="name" placeholder="Your name" required></label>
+    <label>Email<input type="email" name="email" placeholder="you@example.com" required></label>
+    <label>Message<textarea name="message" rows="6" placeholder="Write your message..." required></textarea></label>
+    <button class="btn primary" type="submit">Send Message</button>
+</form>
+<div class="info-card contact-info">
+    <div class="module-icon">📞</div>
+    <h2>MovieBook Support</h2>
+    <p>📧 support@moviebook.com</p>
+    <p>📱 +91 9876543210</p>
+    <p>📍 India</p>
+    <hr>
+    <p class="muted">This contact form stores submitted messages in the project SQLite database.</p>
+</div>
+</div>
+</section>
+{% endblock %}

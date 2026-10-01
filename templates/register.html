@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% block title %}Register | MovieBook{% endblock %}
+{% block content %}
+<section class="auth-page">
+<div class="auth-card">
+    <div class="auth-logo">🎬 <span>Movie</span>Book</div>
+    <h1>Create your account</h1>
+    <p class="muted">Register once to book and manage movie tickets.</p>
+    <form method="POST" class="form-grid">
+        <label>Full name<input name="name" placeholder="Enter your name" required></label>
+        <label>Email<input type="email" name="email" placeholder="name@example.com" required></label>
+        <label>Mobile number<input name="mobile" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile" required></label>
+        <label>City<input name="city" placeholder="Hyderabad / Guntur / Bapatla"></label>
+        <label class="full">Password<input type="password" name="password" minlength="4" placeholder="Create password" required></label>
+        <button class="btn primary full" type="submit">Create Account</button>
+    </form>
+    <p class="auth-switch">Already registered? <a href="{{ url_for('login') }}">Login here</a></p>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Movies | MovieBook{% endblock %}
+{% block content %}
+<section class="page-banner">
+    <div>
+        <span class="eyebrow">MOVIE MODULE</span>
+        <h1>Current & Upcoming Movies</h1>
+        <p>Original movie posters, ratings, release dates, booking and Notify Me.</p>
+    </div>
+</section>
+
+<section class="section">
+    <form class="search-bar" method="GET" action="{{ url_for('movies') }}">
+        <input name="q" value="{{ query }}" placeholder="Search a movie, e.g. Paradise...">
+        <input type="hidden" name="city" value="{{ city }}">
+        <button class="btn primary" type="submit">Search</button>
+    </form>
+
+    <div class="status-line">
+        <span>{% if live %}🟢 Live movie data + original posters from TMDB{% else %}🟡 Local fallback active — add a valid TMDB token for original posters{% endif %}</span>
+        <span>📍 {{ city }}</span>
+    </div>
+
+    {% if api_error %}
+    <div class="flash error movie-api-warning">
+        {{ api_error }}
+        <span class="warning-help">Set <code>TMDB_TOKEN</code> in <code>.env</code> to load original posters and live movie data.</span>
+    </div>
+    {% endif %}
+
+    <h2 style="margin-top:28px">🎬 Now Showing</h2>
+    <div class="movie-grid">
+        {% for movie in movies %}
+        <article class="movie-card">
+            <div class="poster poster-{{ loop.index % 5 }} {% if not movie.poster %}poster-missing{% endif %}">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.name }} official movie poster" loading="lazy">
+                {% else %}
+                    <div class="poster-missing-message">
+                        <span>🎬</span>
+                        <strong>Original poster unavailable</strong>
+                        <small>Connect TMDB in .env</small>
+                    </div>
+                {% endif %}
+                <span class="poster-tag">{{ movie.genre }}</span>
+                <div class="poster-title">{{ movie.name }}</div>
+                <div class="poster-meta">⭐ {{ "%.1f"|format(movie.rating or 0) }}/10</div>
+            </div>
+            <div class="movie-info">
+                <div class="chip">{{ movie.language }}</div>
+                <h3>{{ movie.name }}</h3>
+                <p>{{ movie.description }}</p>
+                <p><strong>Release:</strong> {{ movie.release_date or "Available now" }}</p>
+                <a class="btn primary small" href="{{ url_for('location') }}">🎟 Find Theatre & Book Show</a>
+            </div>
+        </article>
+        {% else %}
+        <div class="empty-state"><h2>No current movies found</h2><p>Try another search.</p></div>
+        {% endfor %}
+    </div>
+
+    <h2 style="margin-top:48px">🔔 Upcoming Movies</h2>
+    <div class="movie-grid">
+        {% for movie in upcoming %}
+        <article class="movie-card">
+            <div class="poster poster-{{ (loop.index + 2) % 5 }} {% if not movie.poster %}poster-missing{% endif %}">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.name }} official movie poster" loading="lazy">
+                {% else %}
+                    <div class="poster-missing-message"><span>🎬</span><strong>Original poster unavailable</strong><small>Connect TMDB in .env</small></div>
+                {% endif %}
+                <span class="poster-tag">Upcoming</span>
+                <div class="poster-title">{{ movie.name }}</div>
+                <div class="poster-meta">📅 {{ movie.release_date }}</div>
+            </div>
+            <div class="movie-info">
+                <div class="chip">{{ movie.language }}</div>
+                <h3>{{ movie.name }}</h3>
+                <p>{{ movie.description }}</p>
+                <form method="POST" action="{{ url_for('notify') }}">
+                    <input type="hidden" name="movie_id" value="{{ movie.id }}">
+                    <input type="hidden" name="movie_title" value="{{ movie.name }}">
+                    <button class="btn primary small" type="submit">🔔 Notify Me</button>
+                </form>
+            </div>
+        </article>
+        {% else %}
+        <div class="empty-state"><h2>No upcoming data available</h2><p>Add a valid TMDB token in .env to load upcoming movies.</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
